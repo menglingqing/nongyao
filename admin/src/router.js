@@ -22,9 +22,9 @@ import AdminUserList from './views/AdminUserList.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
-    { path: '/login', name: 'login', component: Login },
+    { path: '/login', name: 'login', component: Login, meta: { isPublic: true } },
     {
       path: '/',
       name: 'main',
@@ -57,3 +57,10 @@ export default new Router({
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  if (!to.meta.isPublic && !localStorage.token) {
+    return next('/login')
+  }
+  next()
+})
+export default router
